@@ -1,45 +1,29 @@
-// src/pages/Profile.jsx
 import React from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../firebase";
-import { signOut } from "firebase/auth";
 
-const Profile = () => {
-  const [user] = useAuthState(auth);
-
-  const handleLogout = async () => {
-    await signOut(auth);
-    localStorage.removeItem("rakshago_role");
-  };
-
+export default function Profile() {
   return (
-    <div className="min-h-[70vh] flex items-center justify-center bg-gradient-to-br from-pink-50 to-blue-50 px-4">
-      <div className="w-full max-w-md bg-white shadow-xl rounded-2xl p-6">
-        <h1 className="text-2xl font-bold text-pink-700 text-center">Your Profile</h1>
-        <div className="mt-4 space-y-2">
-          <div className="border rounded-lg p-3">
-            <p className="text-sm text-gray-500">Name</p>
-            <p className="font-semibold">{user?.displayName || "—"}</p>
-          </div>
-          <div className="border rounded-lg p-3">
-            <p className="text-sm text-gray-500">Email</p>
-            <p className="font-semibold">{user?.email}</p>
-          </div>
-          <div className="border rounded-lg p-3">
-            <p className="text-sm text-gray-500">UID</p>
-            <p className="font-mono break-all">{user?.uid}</p>
-          </div>
+    <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow p-6">
+      <h2 className="text-2xl font-bold mb-4">Your Profile</h2>
+
+      <div className="grid md:grid-cols-2 gap-4">
+        <div className="p-4 border rounded-lg">
+          <h3 className="font-semibold mb-2">Basic Info</h3>
+          <p>Name: Demo User</p>
+          <p>Email: demo@example.com</p>
         </div>
 
-        <button
-          onClick={handleLogout}
-          className="mt-5 w-full bg-gray-900 hover:bg-black text-white rounded-lg py-2 font-semibold"
-        >
-          Sign Out
-        </button>
+        <div className="p-4 border rounded-lg">
+          <h3 className="font-semibold mb-2">Guardians</h3>
+          <ul className="list-disc list-inside text-gray-700">
+            <li>+91 98xxxxxx01</li>
+            <li>+91 98xxxxxx02</li>
+            <li>+91 98xxxxxx03</li>
+          </ul>
+          <button className="mt-3 text-sm bg-pink-600 text-white px-4 py-2 rounded-lg">
+            Add / Edit Guardians
+          </button>
+        </div>
       </div>
     </div>
   );
-};
-
-export default Profile;
+}

@@ -1,56 +1,32 @@
-// src/pages/AdminPanel.jsx
-import React, { useState, useEffect } from "react";
+import React from "react";
 
-const AdminPanel = () => {
-  const [role, setRole] = useState(localStorage.getItem("rakshago_role") || "user");
-
-  useEffect(() => {
-    localStorage.setItem("rakshago_role", role);
-  }, [role]);
-
+export default function AdminPanel() {
   return (
-    <div className="min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-blue-100 to-pink-100 px-4">
-      <div className="w-full max-w-2xl bg-white shadow-2xl rounded-2xl p-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-blue-700">Admin Panel</h1>
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">Role:</span>
-            <select
-              className="border rounded-lg px-3 py-1"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-            >
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="grid sm:grid-cols-2 gap-4 mt-6">
-          <button className="border rounded-xl p-4 hover:bg-gray-50 text-left">
-            <p className="text-sm text-gray-500">Drivers</p>
-            <p className="font-semibold">Verify Drivers</p>
-          </button>
-          <button className="border rounded-xl p-4 hover:bg-gray-50 text-left">
-            <p className="text-sm text-gray-500">Users</p>
-            <p className="font-semibold">Manage Users</p>
-          </button>
-          <button className="border rounded-xl p-4 hover:bg-gray-50 text-left">
-            <p className="text-sm text-gray-500">Rides</p>
-            <p className="font-semibold">All Rides & Issues</p>
-          </button>
-          <button className="border rounded-xl p-4 hover:bg-gray-50 text-left">
-            <p className="text-sm text-gray-500">Safety</p>
-            <p className="font-semibold">SOS Review Queue</p>
+    <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow p-6">
+      <h2 className="text-2xl font-bold">Admin Panel</h2>
+      <div className="grid md:grid-cols-3 gap-4 mt-6">
+        <div className="p-4 border rounded-lg">
+          <h3 className="font-semibold">Drivers</h3>
+          <p className="text-gray-600 text-sm">Approve KYC & licences</p>
+          <button className="mt-3 text-sm bg-blue-600 text-white px-4 py-2 rounded-lg">
+            Manage Drivers
           </button>
         </div>
-
-        <p className="mt-6 text-sm text-gray-500">
-          (Note: Admin access is demo via localStorage role. We’ll wire real roles with Firestore later.)
-        </p>
+        <div className="p-4 border rounded-lg">
+          <h3 className="font-semibold">Users</h3>
+          <p className="text-gray-600 text-sm">Handle support & safety issues</p>
+          <button className="mt-3 text-sm bg-blue-600 text-white px-4 py-2 rounded-lg">
+            Manage Users
+          </button>
+        </div>
+        <div className="p-4 border rounded-lg">
+          <h3 className="font-semibold">Reports</h3>
+          <p className="text-gray-600 text-sm">Trips, SOS, ratings</p>
+          <button className="mt-3 text-sm bg-blue-600 text-white px-4 py-2 rounded-lg">
+            View Reports
+          </button>
+        </div>
       </div>
     </div>
   );
-};
-
-export default AdminPanel;
+}
