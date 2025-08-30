@@ -10,7 +10,8 @@ export default function Login() {
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const onChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -18,9 +19,9 @@ export default function Login() {
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, form.email, form.password);
-      nav("/book");
+      nav("/book"); // 👈 Abhi rider ke liye redirect. Future me role check karke dynamic banayenge.
     } catch (error) {
-      setErr(error.message);
+      setErr(error.code || "Login failed, try again!");
     } finally {
       setLoading(false);
     }
@@ -31,14 +32,37 @@ export default function Login() {
       <h2 className="text-2xl font-bold text-center text-pink-600">Login</h2>
       {err && <div className="text-red-600 mt-2">{err}</div>}
       <form onSubmit={handleLogin} className="mt-4 space-y-3">
-        <input name="email" value={form.email} onChange={onChange} placeholder="Email" type="email" className="w-full p-2 border rounded" required />
-        <input name="password" value={form.password} onChange={onChange} placeholder="Password" type="password" className="w-full p-2 border rounded" required />
-        <button disabled={loading} type="submit" className="w-full bg-pink-600 text-white py-2 rounded">
-          {loading ? "Logging..." : "Log in"}
+        <input
+          name="email"
+          value={form.email}
+          onChange={onChange}
+          placeholder="Email"
+          type="email"
+          className="w-full p-2 border rounded"
+          required
+        />
+        <input
+          name="password"
+          value={form.password}
+          onChange={onChange}
+          placeholder="Password"
+          type="password"
+          className="w-full p-2 border rounded"
+          required
+        />
+        <button
+          disabled={loading}
+          type="submit"
+          className="w-full bg-pink-600 text-white py-2 rounded"
+        >
+          {loading ? "Logging in..." : "Log in"}
         </button>
       </form>
       <p className="text-sm text-center mt-3">
-        New? <Link to="/signup" className="text-pink-600">Create account</Link>
+        New?{" "}
+        <Link to="/signup" className="text-pink-600">
+          Create account
+        </Link>
       </p>
     </div>
   );
