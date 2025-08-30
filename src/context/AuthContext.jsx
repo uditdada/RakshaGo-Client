@@ -7,25 +7,27 @@ const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [authLoading, setAuthLoading] = useState(true);
+  const [loadingAuth, setLoadingAuth] = useState(true);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => {
       setUser(u || null);
-      setAuthLoading(false);
+      setLoadingAuth(false);
     });
     return () => unsub();
   }, []);
 
-  const logout = async () => {
+  async function logout() {
     await signOut(auth);
-  };
+  }
 
   return (
-    <AuthContext.Provider value={{ user, authLoading, logout }}>
+    <AuthContext.Provider value={{ user, loadingAuth, logout }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-export const useAuth = () => useContext(AuthContext);
+export function useAuth() {
+  return useContext(AuthContext);
+}

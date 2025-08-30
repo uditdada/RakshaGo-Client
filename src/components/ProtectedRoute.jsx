@@ -4,14 +4,8 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export default function ProtectedRoute({ children }) {
-  const { user, authLoading } = useAuth();
-  if (authLoading) {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center text-lg">
-        Loading...
-      </div>
-    );
-  }
+  const { user, loadingAuth } = useAuth();
+  if (loadingAuth) return <div className="p-6 text-center">Loading...</div>;
   if (!user) return <Navigate to="/login" replace />;
   return children;
 }

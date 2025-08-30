@@ -1,26 +1,65 @@
-import React from "react";
-import { Link } from "react-router-dom";
+// src/pages/Signup.jsx
+import React, { useState } from "react";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth, db } from "../firebase";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Signup() {
-  return (
-    <div className="max-w-md mx-auto bg-white rounded-2xl shadow p-6">
-      <h2 className="text-2xl font-bold text-center">
-        Create your <span className="text-pink-600">Raksha</span>
-        <span className="text-blue-600">Go</span> account
-      </h2>
+  const nav = useNavigate();
+  const [form, setForm] = useState({ name: "", email: "", password: "", guardian1: "", guardian2: "", guardian3: "" });
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState("");
 
-      <form className="mt-6 space-y-4">
-        <input className="w-full p-3 border rounded-lg" placeholder="Full Name" />
-        <input type="email" className="w-full p-3 border rounded-lg" placeholder="Email" />
-        <input type="password" className="w-full p-3 border rounded-lg" placeholder="Password" />
-        <button className="w-full bg-pink-600 text-white py-3 rounded-xl hover:bg-pink-700">
-          Sign up
+  const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    setErr("");
+    setLoading(true);
+    try {
+      const res = await createUserWithEmailAndPassword(auth, form.email, form.password);
+      await updateProfile(res.user, { displayName: form.name || "" });
+
+      const guardians = [form.guardian1, form.guardian2, form.guardian3].filter(Boolean);
+      await setDoc(doc(db, "users", res.user.uid), {
+        name: form.name,
+        email: form.email,
+        guardians,
+        role: "user",
+        createdAt: serverTimestamp(),
+      });
+
+      nav("/profile");
+    } catch (error) {
+      setErr(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="max-w-md mx-auto bg-white p-6 rounded-2xl shadow mt-8">
+      <h2 className="text-2xl font-bold text-center text-pink-600">Create account</h2>
+      {err && <div className="text-red-600 mt-2">{err}</div>}
+      <form onSubmit={handleSignup} className="mt-4 space-y-3">
+        <input name="name" value={form.name} onChange={onChange} placeholder="Full name" className="w-full p-2 border rounded" required />
+        <input name="email" value={form.email} onChange={onChange} placeholder="Email" type="email" className="w-full p-2 border rounded" required />
+        <input name="password" value={form.password} onChange={onChange} placeholder="Password" type="password" className="w-full p-2 border rounded" required />
+
+        <div className="grid gap-2">
+          <input name="guardian1" value={form.guardian1} onChange={onChange} placeholder="Guardian #1 phone/email (optional)" className="w-full p-2 border rounded" />
+          <input name="guardian2" value={form.guardian2} onChange={onChange} placeholder="Guardian #2" className="w-full p-2 border rounded" />
+          <input name="guardian3" value={form.guardian3} onChange={onChange} placeholder="Guardian #3" className="w-full p-2 border rounded" />
+        </div>
+
+        <button disabled={loading} type="submit" className="w-full bg-pink-600 text-white py-2 rounded">
+          {loading ? "Creating..." : "Sign up"}
         </button>
       </form>
 
-      <p className="text-center text-sm text-gray-600 mt-4">
-        Already have an account?{" "}
-        <Link to="/login" className="text-pink-600 font-semibold">Log in</Link>
+      <p className="text-sm text-center mt-3">
+        Already have account? <Link to="/login" className="text-pink-600">Log in</Link>
       </p>
     </div>
   );
